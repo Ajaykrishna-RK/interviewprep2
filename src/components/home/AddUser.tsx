@@ -7,6 +7,8 @@ function AddUser() {
   const [form, setForm] = useState({ firstName: "", lastName: "", age: 0 });
   const [users, setUsers] = useState<UserAddType[]>([]);
   const [selectedUser, setSelectedUser] = useState<UserAddType | null>(null);
+  const [skip, setSkip] = useState(0);
+  const limit = 5;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -25,10 +27,11 @@ function AddUser() {
     } catch (err) {}
   };
 
-  const getAllUsers = async () => {
-    const res = await getUsers();
+  const getAllUsers = async (limit: number, skip: number) => {
+    const res = await getUsers(limit, skip);
     setUsers(res?.users);
   };
+
   const handleEdit = (user: UserAddType) => {
     setSelectedUser(user);
     setForm({
@@ -51,12 +54,12 @@ function AddUser() {
   };
 
   useEffect(() => {
-    getAllUsers();
-  }, []);
+    getAllUsers(limit, skip);
+  }, [skip]);
 
   return (
     <div className=" shadow-lg mt-10 p-[20px]  max-w-md mx-auto">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      {/* <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <InputBox
           label="First Name"
           name="firstName"
@@ -82,19 +85,17 @@ function AddUser() {
         <button className="bg-[#4c7bea] rounded-[10px] cursor-pointer text-[#fff] p-[10px]">
           Submit
         </button>
-      </form>
+      </form> */}
 
       {users?.map((item) => (
         <div className="shadow-lg">
           <p>
             {item?.firstName} , {item.lastName}
           </p>
-
-          <button onClick={() => handleEdit(item)} className="">
-            Edit
-          </button>
         </div>
       ))}
+
+      <button onClick={() => setSkip((prev) => prev + limit)}> Next </button>
     </div>
   );
 }

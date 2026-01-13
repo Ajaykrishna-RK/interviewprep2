@@ -10,7 +10,10 @@ export const addUser = async (payload: UserAddType) => {
   }
 };
 
-export const editUser = async (payload: UserAddType, id: string| number | undefined) => {
+export const editUser = async (
+  payload: UserAddType,
+  id: string | number | undefined
+) => {
   try {
     const res = await axiosInstance.put(
       `https://dummyjson.com/users/${id}`,
@@ -22,9 +25,9 @@ export const editUser = async (payload: UserAddType, id: string| number | undefi
   }
 };
 
-export const getUsers = async () => {
+export const getUsers = async (limit: number, skip: number) => {
   try {
-    const res = await axiosInstance.get(`https://dummyjson.com/users?limit=10`);
+    const res = await axiosInstance.get(`users?limit=${limit}&skip=${skip}`);
     return res.data;
   } catch (err) {
     console.error("get User error", err);
